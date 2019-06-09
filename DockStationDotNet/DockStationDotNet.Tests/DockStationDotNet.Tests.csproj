@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -11,6 +11,7 @@
     <PackageReference Include="Docker.DotNet.X509" Version="3.125.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
+    <PackageReference Include="Moq" Version="4.11.0" />
     <PackageReference Include="NFluent" Version="2.5.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="xunit" Version="2.4.1" />
