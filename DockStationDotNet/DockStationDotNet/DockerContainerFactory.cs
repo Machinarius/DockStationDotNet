@@ -30,6 +30,15 @@ namespace DockStationDotNet {
         throw new ArgumentNullException(nameof(containerPorts));
       }
 
+      var currentImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters { All = true });
+      var imageExists = currentImages.Any(image => image.RepoTags.Any(tag => tag == imageName));
+      if (!imageExists) {
+        await _dockerClient.Images.CreateImageAsync(new ImagesCreateParameters {
+          FromImage = imageName,
+          Tag = "latest"
+        }, null, new DummyProgressListener());
+      }
+
       var containersList = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters {
         All = true
       });
@@ -83,6 +92,12 @@ namespace DockStationDotNet {
         await _dockerClient.Containers.RemoveContainerAsync(containerRef.ContainerId, new ContainerRemoveParameters());
       } catch {
         // Assume AutoRemove is on
+      }
+    }
+
+    private class DummyProgressListener : IProgress<JSONMessage> {
+      public void Report(JSONMessage value) {
+        // ignored
       }
     }
   }

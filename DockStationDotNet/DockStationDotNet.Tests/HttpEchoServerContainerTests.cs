@@ -23,6 +23,17 @@ namespace DockStationDotNet.Tests {
     }
 
     [Fact]
+    public async Task RequestingAContainerMustImplicitlyDownloadTheImageIfItDoesNotExistInTheHost() {
+      var currentImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters { All = true });
+      if (currentImages.Any(image => image.RepoTags.Any(tag => tag == "hashicorp/http-echo"))) {
+        await _dockerClient.Images.DeleteImageAsync("hashicorp/http-echo", new ImageDeleteParameters());
+      }
+
+      var containerRef = await _testSubject.CreateContainerAsync("httpEcho", 5678, "hashicorp/http-echo", "-text=\"Hello World\"");
+      Check.That(containerRef).IsNotNull();
+    }
+
+    [Fact]
     public async Task RequestingAContainerMustImplyContainerCreationOnTheMachine() {
       var containerRef = await _testSubject.CreateContainerAsync("httpEcho", 5678, "hashicorp/http-echo", "-text=\"Hello World\"");
       Check.That(containerRef).IsNotNull();
